@@ -1,21 +1,19 @@
-const { sequelize } = require("../../connection");
-const { UserModel } = require("../../model/user.model");
-const UserService = require("../../service/users.service");
+const ThemeService = require("../../service/themes.service");
 
 const listar = async function (req, res) {
-  console.log("listar usuarios controller");
+  console.log("listar temas controller");
   try {
-    const users = await UserService.listar(req.query.filtro || '')
+    const themes = await ThemeService.listar(req.query.filtro || '')
 
-    if (users) {
+    if (themes) {
       res.json({
         success: true,
-        usuarios: users,
+        temas: themes,
       });
     } else {
       res.json({
         success: true,
-        usuarios: [],
+        temas: [],
       });
     }
   } catch (error) {
@@ -27,19 +25,19 @@ const listar = async function (req, res) {
 };
 
 const consultarPorCodigo = async function (req, res) {
-  console.log("consultar usuario por código ");
+  console.log("consultar tema por código ");
   try {
-    const user = await UserService.consultarPorCodigo(req.params.id);
-    console.log("users", user);
-    if (user && user[0] && user[0][0]) {
+    const theme = await ThemeService.consultarPorCodigo(req.params.id);
+    console.log("themes", theme);
+    if (theme && theme[0] && theme[0][0]) {
       res.json({
         success: true,
-        usuario: user[0][0],
+        tema: theme[0][0],
       });
     } else {
       res.json({
         success: true,
-        usuario: user,
+        tema: theme,
       });
     }
   } catch (error) {
@@ -51,24 +49,24 @@ const consultarPorCodigo = async function (req, res) {
 };
 
 const actualizar = async function (req, res) {
-  console.log("actualizar usuarios");
-  //res.send("actualizción de usuarios");
+  console.log("actualizar temas");
+  //res.send("actualizción de temas");
   //Variables
-  let usuarioRetorno = null; //Guarda el usuario que se va a incluir o editar.
+  let temaRetorno = null; //Guarda el tema que se va a incluir o editar.
   const data = req.body; //Se obtienen datos del cuerpo de la petición
   const id = req.body.id;
   try {
-    usuarioRetorno = await UserService.actualizar(req.body.id,
+    temaRetorno = await ThemeService.actualizar(req.body.id,
+      req.body.create_date,
       req.body.name,
-      req.body.last_name,
-      req.body.avatar,
-      req.body.email,
-      req.body.password,
+      req.body.description,
+      req.body.keywords,
+      req.body.owner_user_id,
       req.body.deleted)
     
     res.json({
       success: true,
-      user: usuarioRetorno,
+      theme: temaRetorno,
     });
   } catch (error) {
     console.log(error);
@@ -79,10 +77,10 @@ const actualizar = async function (req, res) {
 };
 
 const eliminar = async function (req, res) {
-  console.log("eliminar usuarios");
-  //res.send("eliminar de usuarios");
+  console.log("eliminar temas");
+  //res.send("eliminar de temas");
 
-  await UserService.eliminar(req.params.id)
+  await ThemeService.eliminar(req.params.id)
 
   res.json({
     success: true,

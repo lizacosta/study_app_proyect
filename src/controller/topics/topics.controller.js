@@ -1,21 +1,19 @@
-const { sequelize } = require("../../connection");
-const { UserModel } = require("../../model/user.model");
-const UserService = require("../../service/users.service");
+const TopicService = require("../../service/topics.service");
 
 const listar = async function (req, res) {
-  console.log("listar usuarios controller");
+  console.log("listar topicos controller");
   try {
-    const users = await UserService.listar(req.query.filtro || '')
+    const topics = await TopicService.listar(req.query.filtro || '')
 
-    if (users) {
+    if (topics) {
       res.json({
         success: true,
-        usuarios: users,
+        topicos: topics,
       });
     } else {
       res.json({
         success: true,
-        usuarios: [],
+        topicos: [],
       });
     }
   } catch (error) {
@@ -27,19 +25,19 @@ const listar = async function (req, res) {
 };
 
 const consultarPorCodigo = async function (req, res) {
-  console.log("consultar usuario por código ");
+  console.log("consultar topico por código ");
   try {
-    const user = await UserService.consultarPorCodigo(req.params.id);
-    console.log("users", user);
-    if (user && user[0] && user[0][0]) {
+    const topic = await TopicService.consultarPorCodigo(req.params.id);
+    console.log("topics", topic);
+    if (topic && topic[0] && topic[0][0]) {
       res.json({
         success: true,
-        usuario: user[0][0],
+        topico: topic[0][0],
       });
     } else {
       res.json({
         success: true,
-        usuario: user,
+        topico: topic,
       });
     }
   } catch (error) {
@@ -51,24 +49,26 @@ const consultarPorCodigo = async function (req, res) {
 };
 
 const actualizar = async function (req, res) {
-  console.log("actualizar usuarios");
-  //res.send("actualizción de usuarios");
+  console.log("actualizar topicos");
+  //res.send("actualizción de topicos");
   //Variables
-  let usuarioRetorno = null; //Guarda el usuario que se va a incluir o editar.
+  let topicoRetorno = null; //Guarda el topico que se va a incluir o editar.
   const data = req.body; //Se obtienen datos del cuerpo de la petición
   const id = req.body.id;
   try {
-    usuarioRetorno = await UserService.actualizar(req.body.id,
+    topicoRetorno = await TopicService.actualizar(req.body.id,
+      req.body.create_date,
       req.body.name,
-      req.body.last_name,
-      req.body.avatar,
-      req.body.email,
-      req.body.password,
+      req.body.topic_id,
+      req.body.order,
+      req.body.priority,
+      req.body.color,
+      req.body.owner_user_id,
       req.body.deleted)
     
     res.json({
       success: true,
-      user: usuarioRetorno,
+      topic: topicoRetorno,
     });
   } catch (error) {
     console.log(error);
@@ -79,10 +79,10 @@ const actualizar = async function (req, res) {
 };
 
 const eliminar = async function (req, res) {
-  console.log("eliminar usuarios");
-  //res.send("eliminar de usuarios");
+  console.log("eliminar topicos");
+  //res.send("eliminar de topicos");
 
-  await UserService.eliminar(req.params.id)
+  await TopicService.eliminar(req.params.id)
 
   res.json({
     success: true,
